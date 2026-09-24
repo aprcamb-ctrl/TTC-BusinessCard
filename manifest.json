@@ -1,0 +1,16 @@
+{
+  "name": "TTC Card",
+  "short_name": "TTC Card",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#162c26",
+  "theme_color": "#162c26",
+  "icons": [
+    {
+      "src": "assets/app-icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

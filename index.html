@@ -11,6 +11,7 @@
     <meta name="apple-mobile-web-app-title" content="TTC Card">
     <link rel="apple-touch-icon" href="assets/app-icon.jpg">
     <link rel="icon" type="image/jpeg" href="assets/app-icon.jpg">
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#162c26">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -167,6 +168,15 @@ END:VCARD`;
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
+        }
+
+        // Register Service Worker for PWA (updates app automatically when network is available)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
         }
     </script>
 </body>
