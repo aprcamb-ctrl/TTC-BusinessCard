@@ -107,7 +107,10 @@
                 </a>
             </div>
 
-            <div class="footer-text">Serve. Smash. Win.</div>
+            <div class="footer-text">
+                Serve. Smash. Win.<br>
+                <a href="#" onclick="window.location.reload(true);" style="color: var(--color-accent-peach); text-decoration: none; font-size: 10px; margin-top: 10px; display: inline-block;">↻ Force Refresh App</a>
+            </div>
         </div>
 
         <!-- QR Code Modal -->
@@ -173,11 +176,35 @@ END:VCARD`;
         // Register Service Worker for PWA (updates app automatically when network is available)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(err => {
+                navigator.serviceWorker.register('/sw.js').then(reg => {
+                    reg.onupdatefound = () => {
+                        const installingWorker = reg.installing;
+                        installingWorker.onstatechange = () => {
+                            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // New update available, force reload
+                                window.location.reload();
+                            }
+                        };
+                    };
+                }).catch(err => {
                     console.log('ServiceWorker registration failed: ', err);
                 });
             });
+            
+            // Listen for changes from the service worker taking over
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                window.location.reload();
+            });
         }
+        
+        // Auto-refresh when the app is brought back from the background
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === 'visible') {
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.ready.then(reg => reg.update());
+                }
+            }
+        });
     </script>
 </body>
 </html>
